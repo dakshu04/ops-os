@@ -1,0 +1,55 @@
+// 1. GENERATOR (Standard JS Client)
+generator client {
+  provider = "prisma-client-js"
+}
+
+// 2. DATASOURCE (Supabase Connection)
+datasource db {
+  provider = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// --- YOUR OPS-OS MODELS (Linear Style) ---
+
+enum TaskStatus {
+  NEW
+  BACKLOG
+  IN_PROGRESS
+  DONE
+}
+
+enum Priority {
+  NO_PRIORITY
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model User {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  name        String?
+  avatarUrl   String?
+  webhookUrl  String?
+  agencyName  String?
+  tasks       Task[]
+  createdAt   DateTime @default(now())
+}
+
+model Task {
+  id          String   @id @default(uuid())
+  readableId  Int      @unique @default(autoincrement())
+  title       String
+  description String?  @db.Text
+  status      TaskStatus @default(NEW)
+  priority    Priority?   @default(NO_PRIORITY)
+  labels      String[]
+  position    Float    @default(0)
+  dueDate     DateTime?
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
