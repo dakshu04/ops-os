@@ -8,9 +8,11 @@ interface ColumnProps {
   color: string;
   tasks: Task[];
   onDelete?: (taskId: string) => Promise<void>;
+  onTaskClick?: (task: Task) => void;
 }
 
-export function Column({ id, title, color, tasks, onDelete }: ColumnProps) {
+// 1. Destructure 'onTaskClick' here
+export function Column({ id, title, color, tasks, onDelete, onTaskClick }: ColumnProps) {
   const { setNodeRef } = useDroppable({ id });
 
   return (
@@ -27,9 +29,14 @@ export function Column({ id, title, color, tasks, onDelete }: ColumnProps) {
       {/* Drop Zone */}
       <div ref={setNodeRef} className="flex-1 overflow-y-auto bg-zinc-900/10 rounded-xl border border-zinc-800/30 p-2 space-y-2">
         {tasks.map((task) => (
-          <TaskCard key={task.id} task={task} onDelete={onDelete} />
+          <TaskCard 
+            key={task.id} 
+            task={task} 
+            onDelete={onDelete} 
+            // 2. Pass the click handler correctly
+            onClick={() => onTaskClick?.(task)} 
+          />
         ))}
-        {/* Invisible spacer so you can drop at the bottom */}
         <div className="h-12 w-full" />
       </div>
     </div>

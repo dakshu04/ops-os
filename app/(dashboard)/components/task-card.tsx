@@ -6,9 +6,10 @@ interface TaskCardProps {
   task: Task;
   isOverlay?: boolean;
   onDelete?: (id: string) => void; // Add delete prop
+  onClick?: () => void;
 }
 
-export function TaskCard({ task, isOverlay, onDelete }: TaskCardProps) {
+export function TaskCard({ task, isOverlay, onDelete, onClick }: TaskCardProps) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: task.id,
   });
@@ -19,6 +20,7 @@ export function TaskCard({ task, isOverlay, onDelete }: TaskCardProps) {
 
   return (
     <div
+      onClick={onClick}
       ref={setNodeRef}
       style={style}
       {...listeners}

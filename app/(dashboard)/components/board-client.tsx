@@ -19,6 +19,7 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createTask, deleteTask, updateTaskStatus } from "./actions";
 import { NewTaskDialog } from "./new-task-dialog";
+import { TaskSheet } from "./task-sheet";
 
 const COLUMNS = [
   { id: "NEW", title: "New", color: "bg-blue-500" },
@@ -31,6 +32,7 @@ export default function BoardClient({ initialTasks }: { initialTasks: Task[] }) 
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [activeId, setActiveId] = useState<string | number | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
   // FIX: Use setTimeout to break the synchronous chain
   useEffect(() => {
@@ -132,6 +134,7 @@ export default function BoardClient({ initialTasks }: { initialTasks: Task[] }) 
                 color={col.color}
                 tasks={tasks.filter((t) => t.status === col.id)}
                 onDelete={handleDelete}
+                onTaskClick={setSelectedTask}
               />
             ))}
           </div>
@@ -141,6 +144,11 @@ export default function BoardClient({ initialTasks }: { initialTasks: Task[] }) 
           {activeId ? <TaskCard task={tasks.find((t) => t.id === activeId)!} isOverlay /> : null}
         </DragOverlay>
       </div>
+      <TaskSheet
+          task={selectedTask} 
+          isOpen={!!selectedTask} 
+          onClose={() => setSelectedTask(null)} 
+      />
     </DndContext>
   );
 }

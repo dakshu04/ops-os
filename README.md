@@ -148,9 +148,9 @@ You have just signed a new client, **"Acme Corp"**, for a website redesign. You 
 
 
 # **The Master Checklist**
-[UI] The "New Task" Dialog: Replace the simple button with a professional Shadcn form (Title, Description, Priority, Milestone).
+[UI] The "New Task" Dialog: Replace the simple button with a professional Shadcn form (Title, Description, Priority, Milestone).✅
 
-[UI] Task Details View: Make cards clickable to open a sheet/modal where you can read and edit the full description.
+[UI] Task Details View: Make cards clickable to open a sheet/modal where you can read and edit the full description.✅
 
 [UI] Priority & Badges: Add visual badges for Low/Medium/High/Urgent priorities on the card.
 
