@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { Task, TaskStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { Priority } from "@prisma/client";
+import { createClient } from "@/utils/supabase/server";
 
 export async function createTask(formData: FormData) {
   try {
@@ -14,11 +15,26 @@ export async function createTask(formData: FormData) {
     const isMilestone = formData.get("isMilestone") === "true"; 
 
     // Seed User (Temp)
+    const supabase = await createClient();
+    const {
+      data: { user: authUser },
+      error,
+    } = await supabase.auth.getUser();
+
+    if (error || !authUser) {
+      throw new Error("Unauthorized: Please log in first.");
+    }
+
     const user = await prisma.user.upsert({
-      where: { email: "demo@ops-os.com" },
+      where: { email: authUser.email! },
       update: {},
-      create: { email: "demo@ops-os.com", name: "Demo User", id: "user-123" }
+      create: { 
+        id: authUser.id, // <--- CRITICAL: Sync IDs
+        email: authUser.email!, 
+        name: authUser.user_metadata.full_name || "Unknown User"
+      }
     });
+
 
     const newTask = await prisma.task.create({
       data: {
