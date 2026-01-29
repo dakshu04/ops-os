@@ -152,7 +152,7 @@ You have just signed a new client, **"Acme Corp"**, for a website redesign. You 
 
 [UI] Task Details View: Make cards clickable to open a sheet/modal where you can read and edit the full description.✅
 
-[UI] Priority & Badges: Add visual badges for Low/Medium/High/Urgent priorities on the card.
+[UI] Priority & Badges: Add visual badges for Low/Medium/High/Urgent priorities on the card.✅
 
 [Auth] Supabase Auth Integration: Stop using "Demo User" and allow Google/Email login.
 
