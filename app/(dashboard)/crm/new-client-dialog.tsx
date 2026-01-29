@@ -12,20 +12,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Plus, Loader2 } from "lucide-react";
-import { createTask } from "./actions"; // Your server action
-import { Task } from "@prisma/client";
+import { createClientAction } from "./actions"; // Import the action
+import { toast } from "sonner"; // Assuming you have sonner or use standard alert
 
-// Update props to accept projectId
-export function NewTaskDialog({ 
-  onTaskCreated, 
-  projectId 
-}: { 
-  onTaskCreated: (task: Task) => void; 
-  projectId?: string; 
-}) {
+export function NewClientDialog() {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -34,15 +26,14 @@ export function NewTaskDialog({
     setLoading(true);
 
     const formData = new FormData(event.currentTarget);
-    const result = await createTask(formData); // Server action handles the creation
+    const result = await createClientAction(formData);
 
     setLoading(false);
 
-    if (result.success && result.task) {
-      onTaskCreated(result.task); // Update UI immediately
+    if (result.success) {
       setOpen(false); // Close modal
     } else {
-      alert("Failed to create task");
+      alert("Error creating client"); // Simple fallback
     }
   }
 
@@ -51,40 +42,35 @@ export function NewTaskDialog({
       <DialogTrigger asChild>
         <Button className="bg-indigo-600 hover:bg-indigo-500 text-white">
           <Plus className="w-4 h-4 mr-2" />
-          New Issue
+          Add Client
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-zinc-950 border-zinc-800 text-zinc-100">
         <DialogHeader>
-          <DialogTitle>Create New Issue</DialogTitle>
+          <DialogTitle>Add New Client</DialogTitle>
           <DialogDescription className="text-zinc-400">
-            Add a new task to your board.
+            Create a new client profile to manage their projects.
           </DialogDescription>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4 py-4">
-          
-          {/* 👇 THE SECRET SAUCE: Hidden Input for Project ID 👇 */}
-          <input type="hidden" name="projectId" value={projectId || ""} />
-
           <div className="space-y-2">
-            <Label htmlFor="title" className="text-zinc-400">Title</Label>
+            <Label htmlFor="name" className="text-zinc-400">Company Name</Label>
             <Input 
-                id="title" 
-                name="title" 
-                placeholder="Fix navigation bug..." 
+                id="name" 
+                name="name" 
+                placeholder="Acme Corp" 
                 className="bg-zinc-900 border-zinc-800 focus:border-indigo-500" 
                 required 
             />
           </div>
-          
           <div className="space-y-2">
-            <Label htmlFor="description" className="text-zinc-400">Description</Label>
-            <Textarea 
-                id="description" 
-                name="description" 
-                placeholder="Describe the issue..." 
-                className="bg-zinc-900 border-zinc-800 focus:border-indigo-500 min-h-[100px]" 
+            <Label htmlFor="email" className="text-zinc-400">Contact Email (Optional)</Label>
+            <Input 
+                id="email" 
+                name="email" 
+                placeholder="contact@acme.com" 
+                className="bg-zinc-900 border-zinc-800 focus:border-indigo-500" 
             />
           </div>
 
@@ -95,7 +81,7 @@ export function NewTaskDialog({
                 disabled={loading}
             >
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Create Issue
+              Create Client
             </Button>
           </DialogFooter>
         </form>

@@ -28,11 +28,15 @@ const COLUMNS = [
   { id: "DONE", title: "Done", color: "bg-green-500" },
 ];
 
-export default function BoardClient({ initialTasks }: { initialTasks: Task[] }) {
+export default function BoardClient({ initialTasks, activeProjectId }: { initialTasks: Task[], activeProjectId?: string }) {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [activeId, setActiveId] = useState<string | number | null>(null);
   const [mounted, setMounted] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+
+  useEffect(() => {
+    setTasks(initialTasks);
+  }, [initialTasks]);
 
   // FIX: Use setTimeout to break the synchronous chain
   useEffect(() => {
@@ -116,10 +120,12 @@ export default function BoardClient({ initialTasks }: { initialTasks: Task[] }) 
             <p className="text-zinc-500 text-xs mt-1 font-medium">Sprint 4 • Due Mar 04</p>
           </div>
           <div className="flex gap-2">
-             <NewTaskDialog onTaskCreated={(newTask) => {
-                // This updates the UI instantly!
-                setTasks((prev) => [...prev, newTask]);
-              }} />
+             <NewTaskDialog 
+                projectId={activeProjectId} // <--- PASS THE ID HERE
+                onTaskCreated={(newTask) => {
+                    setTasks((prev) => [...prev, newTask]);
+                }} 
+             />
           </div>
         </div>
 
