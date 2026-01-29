@@ -154,7 +154,7 @@ You have just signed a new client, **"Acme Corp"**, for a website redesign. You 
 
 [UI] Priority & Badges: Add visual badges for Low/Medium/High/Urgent priorities on the card.✅
 
-[Auth] Supabase Auth Integration: Stop using "Demo User" and allow Google/Email login.
+[Auth] Supabase Auth Integration: Stop using "Demo User" and allow Google/Email login.✅
 
 [DB] Multi-Tenancy Schema: Update database to support Projects and Clients (not just Tasks).
 

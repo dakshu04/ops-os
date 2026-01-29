@@ -1,17 +1,18 @@
-// 1. GENERATOR (Standard JS Client)
+// 1. GENERATOR
 generator client {
   provider = "prisma-client-js"
 }
 
-// 2. DATASOURCE (Supabase Connection)
+// 2. DATASOURCE (Supabase)
 datasource db {
-  provider = "postgresql"
+  provider  = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
-// --- YOUR OPS-OS MODELS (Linear Style) ---
+// --- AGENCY OPS-OS MODELS ---
 
+// 3. ENUMS
 enum TaskStatus {
   NEW
   BACKLOG
@@ -20,37 +21,89 @@ enum TaskStatus {
 }
 
 enum Priority {
-  NO_PRIORITY
   LOW
   MEDIUM
   HIGH
   URGENT
 }
 
+// 4. MODELS
+
+// The Agency Owner (You) or Team Member
 model User {
-  id          String   @id @default(uuid())
-  email       String   @unique
-  name        String?
-  avatarUrl   String?
-  webhookUrl  String?
-  agencyName  String?
-  tasks       Task[]
-  createdAt   DateTime @default(now())
+  id         String  @id // Supabase Auth ID (UUID)
+  email      String  @unique
+  name       String?
+  avatarUrl  String?
+  agencyName String?
+
+  // Relationships
+  clients Client[] // You manage multiple Clients
+  tasks   Task[] // Tasks assigned to/created by you
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
+// The Company paying you (e.g., "Acme Corp")
+model Client {
+  id    String  @id @default(cuid())
+  name  String
+  logo  String? // URL to client logo
+  email String? // Contact person email
+
+  // Belongs to an Agency User
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Has many Projects
+  projects Project[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// The Specific Contract (e.g., "Website Redesign")
+model Project {
+  id     String @id @default(cuid())
+  name   String
+  status String @default("ACTIVE") // ACTIVE, ARCHIVED, COMPLETED
+
+  // Belongs to a Client
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  // Has many Tasks
+  tasks Task[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// The Unit of Work (e.g., "Design Home Page")
 model Task {
-  id          String   @id @default(uuid())
-  readableId  Int      @unique @default(autoincrement())
-  isMilestone Boolean  @default(false)
+  id          String     @id @default(uuid())
+  readableId  Int        @unique @default(autoincrement()) // OPS-101
   title       String
-  description String?  @db.Text
+  description String?    @db.Text
   status      TaskStatus @default(NEW)
-  priority    Priority?   @default(NO_PRIORITY)
-  labels      String[]
-  position    Float    @default(0)
+  priority    Priority   @default(MEDIUM)
+  isMilestone Boolean    @default(false)
+  position    Float      @default(0) // For Drag & Drop sorting
   dueDate     DateTime?
-  userId      String?
-  user        User?    @relation(fields: [userId], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  labels      String[] // Keeping this for flexibility
+
+  // Relationships
+  userId String // Assigned User
+  user   User   @relation(fields: [userId], references: [id])
+
+  projectId String? // Linked Project (Optional for generic tasks)
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Indexes for faster dashboard loading
+  @@index([userId])
+  @@index([projectId])
 }
