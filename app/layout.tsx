@@ -21,9 +21,9 @@ export const metadata: Metadata = {
   keywords: ["project management", "SaaS", "workflow automation", "ops-os", "task tracking", "developer tools"],
   authors: [{ name: "Daksh" }],
   icons: {
-    icon: "/crmlogo.png", // Using your logo from the public folder
-    shortcut: "/crmlogo.png",
-    apple: "/crmlogo.png",
+    icon: "/crmlogo.svg", // Using your logo from the public folder
+    shortcut: "/crmlogo.svg",
+    apple: "/crmlogo.svg",
   },
   openGraph: {
     title: "Ops-OS | The Modern Project Management OS",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     siteName: "Ops-OS",
     images: [
       {
-        url: "/crmlogo.png",
+        url: "/crmlogo.svg",
         width: 800,
         height: 600,
       },

@@ -16,6 +16,6 @@ export const config = {
      * - login (login page)
      * - auth (auth callback)
      */
-    "/((?!_next/static|_next/image|favicon.ico|login|auth).*)",
+    "/((?!_next/static|_next/image|favicon.ico|login|auth|$).*)",
   ],
 };
