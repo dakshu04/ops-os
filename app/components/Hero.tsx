@@ -109,8 +109,8 @@ export default function Hero() {
                     <HeroVideoDialog
                         className="block dark:hidden w-full max-w-4xl mt-10 border-5 rounded-xl shadow-lg"
                         animationStyle="from-center"
-                        videoSrc="https://www.youtube.com/embed/64wxiW46Ejc?si=IB2QB6XSixfyxrPJ"
-                        thumbnailSrc="https://img.youtube.com/vi/64wxiW46Ejc/maxresdefault.jpg"
+                        videoSrc="https://www.youtube.com/embed/0PmmQ4Ahd_o?si=6M-uRlna8mTaG8Fi"
+                        thumbnailSrc="https://img.youtube.com/vi/0PmmQ4Ahd_o/maxresdefault.jpg"
                         thumbnailAlt="Youtube Video Thumbnail"
                     />
             </motion.div>
