@@ -94,6 +94,7 @@ export default function Hero() {
                 <motion.div
                     variants={blurFadeVariant} >
                     <Button variant="outline"
+                    onClick={() => window.location.href = '/login'}
                     size="lg"
                     className="py-1 mt-6 cursor-pointer">
                         Get Started 
