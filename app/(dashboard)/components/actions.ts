@@ -64,6 +64,7 @@ export async function deleteTask(taskId: string) {
     await prisma.task.delete({
       where: { id: taskId },
     });
+    revalidatePath("/board");
     return { success: true };
   } catch (error) {
     console.error("Failed to delete task:", error);

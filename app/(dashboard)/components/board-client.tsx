@@ -173,7 +173,14 @@ export default function BoardClient({
       <TaskSheet
           task={selectedTask} 
           isOpen={!!selectedTask} 
-          onClose={() => setSelectedTask(null)} 
+          onClose={() => setSelectedTask(null)}
+          onTaskUpdated={(updatedTask) => {
+            setTasks((prev) => prev.map(t => t.id === updatedTask.id ? updatedTask : t));
+          }}
+          onTaskDeleted={(taskId) => {
+            setTasks((prev) => prev.filter(t => t.id !== taskId));
+            setSelectedTask(null);
+          }}
       />
     </DndContext>
   );

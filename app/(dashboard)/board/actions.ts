@@ -53,3 +53,29 @@ export async function updateTaskStatus(taskId: string, status: any) {
     });
     revalidatePath("/board");
 }
+
+// ... inside app/(dashboard)/board/actions.ts
+
+export async function updateTaskDetails(formData: FormData) {
+  try {
+    const taskId = formData.get("taskId") as string;
+    const title = formData.get("title") as string;
+    const description = formData.get("description") as string;
+    const priority = formData.get("priority") as any;
+
+    const updatedTask = await prisma.task.update({
+      where: { id: taskId },
+      data: {
+        title,
+        description,
+        priority
+      }
+    });
+
+    revalidatePath("/board");
+    return { success: true, task: updatedTask };
+  } catch (error) {
+    console.error("Failed to update task", error);
+    return { success: false, error: "Failed to update" };
+  }
+}

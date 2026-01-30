@@ -159,12 +159,15 @@ You have just signed a new client, **"Acme Corp"**, for a website redesign. You 
 [DB] Multi-Tenancy Schema: Update database to support Projects and Clients (not just Tasks). 
 Also there should be sign that project is associate to which client✅
 
-[UI] Project Switcher: Update Sidebar to switch between different Client projects.
+[UI] Project Switcher: Update Sidebar to switch between different Client projects.✅
 
-[Feature] Rich Text Editor: Add Markdown support for task descriptions.
+[Feature] Rich Text Editor: Add Markdown support for task descriptions.✅
+
+[UI] Add the beautiful custom build Landing Page
 
 [Automation] Webhook Trigger: Connect the "Milestone" drop to an actual API endpoint (n8n/Zapier).
 
 [Optimization] Real-time Sync: Use Supabase Realtime so the board updates if someone else moves a card.
+
 
 [Deploy] Vercel Deployment: Push the final app to the live web.
