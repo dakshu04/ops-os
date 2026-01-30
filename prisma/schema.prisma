@@ -10,9 +10,8 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-// --- AGENCY OPS-OS MODELS ---
+// --- ENUMS ---
 
-// 3. ENUMS
 enum TaskStatus {
   NEW
   BACKLOG
@@ -27,19 +26,19 @@ enum Priority {
   URGENT
 }
 
-// 4. MODELS
+// --- MODELS ---
 
-// The Agency Owner (You) or Team Member
+// The Agency Owner (You)
 model User {
-  id         String  @id // Supabase Auth ID (UUID)
-  email      String  @unique
+  id         String   @id // Supabase Auth ID (UUID)
+  email      String   @unique
   name       String?
   avatarUrl  String?
   agencyName String?
 
   // Relationships
   clients Client[] // You manage multiple Clients
-  tasks   Task[] // Tasks assigned to/created by you
+  tasks   Task[]   // Tasks assigned to/created by you
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -47,13 +46,14 @@ model User {
 
 // The Company paying you (e.g., "Acme Corp")
 model Client {
-  id    String  @id @default(cuid())
-  name  String
-  logo  String? // URL to client logo
-  email String? // Contact person email
+  id     String  @id @default(cuid())
+  name   String
+  logo   String? // URL to client logo
+  email  String? // Contact person email
 
   // Belongs to an Agency User
   userId String
+  // 👇 If User is deleted, delete their Clients
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // Has many Projects
@@ -71,6 +71,7 @@ model Project {
 
   // Belongs to a Client
   clientId String
+  // 👇 CRITICAL: If Client is deleted, delete this Project
   client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
 
   // Has many Tasks
@@ -91,13 +92,14 @@ model Task {
   isMilestone Boolean    @default(false)
   position    Float      @default(0) // For Drag & Drop sorting
   dueDate     DateTime?
-  labels      String[] // Keeping this for flexibility
+  labels      String[]   // Keeping this for flexibility
 
   // Relationships
   userId String // Assigned User
   user   User   @relation(fields: [userId], references: [id])
 
   projectId String? // Linked Project (Optional for generic tasks)
+  // 👇 CRITICAL: If Project is deleted, delete this Task
   project   Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())

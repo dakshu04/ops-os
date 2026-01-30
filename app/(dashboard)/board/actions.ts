@@ -12,48 +12,35 @@ export async function createTask(formData: FormData) {
 
     if (!authUser) throw new Error("Unauthorized");
 
-    // 1. Get the Project ID from the form
+    // 1. Get the Project ID correctly from the hidden input
     const rawProjectId = formData.get("projectId") as string;
-    // Handle empty strings (Inbox) vs real IDs
     const projectId = (!rawProjectId || rawProjectId === "") ? null : rawProjectId;
-
-    // DEBUG LOGGING: Look at your VS Code Terminal when you create a task!
-    console.log("------------------------------------------------");
-    console.log("📝 Creating Task...");
-    console.log("🔹 User ID:", authUser.id);
-    console.log("🔹 Incoming Project ID (Raw):", rawProjectId);
-    console.log("🔹 Saving with Project ID:", projectId);
-    console.log("------------------------------------------------");
-
+    
+    // 2. Get the clean title (No more debug text)
     const title = formData.get("title") as string;
     const description = formData.get("description") as string;
     const priority = (formData.get("priority") as any) || "MEDIUM";
     
-    // 2. Create the task
     const newTask = await prisma.task.create({
       data: {
-        title,
+        title,         // <--- Storing the real title now
         description,
         priority,
         status: "NEW",
         userId: authUser.id,
-        projectId: projectId, // <--- Using the variable from the form
+        projectId: projectId, 
       },
     });
 
-    // 3. Revalidate the board
     revalidatePath("/board");
-
-    // 4. CRITICAL: Return the actual task so the UI can update!
     return { success: true, task: newTask }; 
 
   } catch (error) {
-    console.error("❌ Error creating task:", error);
+    console.error("Error creating task:", error);
     return { success: false, error: "Failed to create task" };
   }
 }
 
-// Keep your other functions (deleteTask, updateTaskStatus) as they are...
 export async function deleteTask(taskId: string) {
     await prisma.task.delete({ where: { id: taskId } });
     revalidatePath("/board");

@@ -13,6 +13,7 @@ export async function createTask(formData: FormData) {
     const priority = (formData.get("priority") as Priority) || "MEDIUM";
     // Checkbox value is "true" if checked, null if not
     const isMilestone = formData.get("isMilestone") === "true"; 
+    const projectId = formData.get("projectId") as string | null;
 
     // Seed User (Temp)
     const supabase = await createClient();
@@ -44,6 +45,7 @@ export async function createTask(formData: FormData) {
         status: "NEW",
         userId: user.id,
         isMilestone,
+        projectId: projectId || null,
       },
     });
 

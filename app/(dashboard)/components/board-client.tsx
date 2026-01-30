@@ -15,8 +15,7 @@ import {
 import { Task, TaskStatus } from "@prisma/client";
 import { Column } from "./column";
 import { TaskCard } from "./task-card";
-import { Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react"; // Kept if you need it elsewhere, though used in Dialog
 import { createTask, deleteTask, updateTaskStatus } from "./actions";
 import { NewTaskDialog } from "./new-task-dialog";
 import { TaskSheet } from "./task-sheet";
@@ -28,7 +27,17 @@ const COLUMNS = [
   { id: "DONE", title: "Done", color: "bg-green-500" },
 ];
 
-export default function BoardClient({ initialTasks, activeProjectId }: { initialTasks: Task[], activeProjectId?: string }) {
+export default function BoardClient({ 
+  initialTasks, 
+  activeProjectId, 
+  projectName, 
+  clientName 
+}: { 
+  initialTasks: Task[], 
+  activeProjectId?: string, 
+  projectName?: string, 
+  clientName?: string 
+}) {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [activeId, setActiveId] = useState<string | number | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -56,6 +65,7 @@ export default function BoardClient({ initialTasks, activeProjectId }: { initial
     await deleteTask(taskId);
   }
 
+  // Note: handleCreate is inside the Dialog component now, but keeping this logic safe
   async function handleCreate() {
     const result = await createTask(new FormData());
     if (result.success && result.task) {
@@ -116,9 +126,19 @@ export default function BoardClient({ initialTasks, activeProjectId }: { initial
         {/* HEADER */}
         <div className="flex items-center justify-between px-4 md:px-6 py-4 border-b border-zinc-800/40 shrink-0">
           <div>
-            <h1 className="text-lg md:text-xl font-bold tracking-tight text-zinc-100">Project Alpha</h1>
+            {/* 👇 UPDATED: Dynamic Client Name */}
+            <div className="flex items-center gap-2 text-zinc-500 text-xs font-medium uppercase tracking-wider mb-1">
+                {clientName || "Personal"}
+            </div>
+            
+            {/* 👇 UPDATED: Dynamic Project Name */}
+            <h1 className="text-lg md:text-xl font-bold tracking-tight text-zinc-100">
+                {projectName || "Inbox"}
+            </h1>
+            
             <p className="text-zinc-500 text-xs mt-1 font-medium">Sprint 4 • Due Mar 04</p>
           </div>
+          
           <div className="flex gap-2">
              <NewTaskDialog 
                 projectId={activeProjectId} // <--- PASS THE ID HERE

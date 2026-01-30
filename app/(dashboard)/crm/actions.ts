@@ -46,3 +46,23 @@ export async function createClientAction(formData: FormData) {
     return { error: `Database Error: ${(error as Error).message}` };
   }
 }
+
+export async function deleteClientAction(formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+
+  const clientId = formData.get("clientId") as string;
+
+  try {
+    await prisma.client.delete({
+      where: { 
+        id: clientId,
+        userId: user.id // Security check: Ensure they own the client
+      }
+    });
+    revalidatePath("/crm");
+  } catch (error) {
+    console.error("Failed to delete client:", error);
+  }
+}

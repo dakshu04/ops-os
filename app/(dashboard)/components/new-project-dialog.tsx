@@ -23,7 +23,6 @@ import { Label } from "@/components/ui/label";
 import { Plus, Loader2 } from "lucide-react";
 import { createProjectAction } from "../action";
 
-// We need to know who the clients are to show them in the dropdown
 type Client = {
   id: string;
   name: string;
@@ -52,8 +51,6 @@ export function NewProjectDialog({ clients }: { clients: Client[] }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        {/* Hidden trigger - we will click this programmatically from the parent menu if needed, 
-            OR we can just use this component directly inside the menu item */}
         <div className="flex items-center gap-2 cursor-pointer w-full h-full">
             <div className="h-6 w-6 rounded border border-dashed border-indigo-500/30 flex items-center justify-center">
                 <Plus className="h-3 w-3 text-indigo-400" />
@@ -90,12 +87,14 @@ export function NewProjectDialog({ clients }: { clients: Client[] }) {
 
           <div className="space-y-2">
             <Label htmlFor="name" className="text-zinc-400">Project Name</Label>
+            {/* 👇 THE FIX IS HERE 👇 */}
             <Input 
                 id="name" 
                 name="name" 
                 placeholder="Website Redesign" 
                 className="bg-zinc-900 border-zinc-800 focus:border-indigo-500" 
                 required 
+                onKeyDown={(e) => e.stopPropagation()} 
             />
           </div>
 
