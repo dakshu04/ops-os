@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Ops-OS | Project Management OS",
     description: "High-performance project management for modern teams.",
-    images: ["/crmlogo.png"],
+    images: ["/crmlogo.svg"],
   },
 };
 
