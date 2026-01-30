@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronsUpDown, Check, Trash2 } from "lucide-react";
+import { ChevronsUpDown, Check, Trash2, Plus } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,

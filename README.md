@@ -157,7 +157,7 @@ You have just signed a new client, **"Acme Corp"**, for a website redesign. You 
 [Auth] Supabase Auth Integration: Stop using "Demo User" and allow Google/Email login.✅
 
 [DB] Multi-Tenancy Schema: Update database to support Projects and Clients (not just Tasks). 
-Also there should be sign that project is associate to which client
+Also there should be sign that project is associate to which client✅
 
 [UI] Project Switcher: Update Sidebar to switch between different Client projects.
 
